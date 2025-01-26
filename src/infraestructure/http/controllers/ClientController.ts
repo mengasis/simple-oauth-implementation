@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { Client } from '../../../domain/entities/Client';
 import type { LowDBClientStorage } from '../../database/LowDBClientStorage';
 import { BadRequestException } from '../../../domain/exceptions/HttpExceptions';
+import { LoggerFactory } from '../../logger/LoggerFactory';
 
 interface RegisterClientBody {
   client_name: string;
@@ -10,11 +11,15 @@ interface RegisterClientBody {
   scopes: string[];
 }
 
+const logger = LoggerFactory.getLogger();
+
 export class ClientController {
   constructor(private readonly clientStorage: LowDBClientStorage) {}
 
   async register(req: Request<unknown, unknown, RegisterClientBody>, res: Response) {
     const { client_name, redirect_uris, grant_types, scopes } = req.body;
+
+    logger.info(`Registering new client: ${client_name}`, 'ClientController');
 
     if (!client_name) {
       throw new BadRequestException('The client_name field is required.');
@@ -47,6 +52,7 @@ export class ClientController {
     );
 
     await this.clientStorage.save(client);
+    logger.info(`Client registered successfully: ${client.id}`, 'ClientController');
 
     return res.status(201).json({
       client_id: client.id,

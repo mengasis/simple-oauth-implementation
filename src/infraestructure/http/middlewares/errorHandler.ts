@@ -1,5 +1,8 @@
 import type { ErrorRequestHandler } from 'express';
 import { BaseException } from '../../../domain/exceptions/HttpExceptions';
+import { LoggerFactory } from '../../logger/LoggerFactory';
+
+const logger = LoggerFactory.getLogger();
 
 export const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
   if (error instanceof BaseException) {
@@ -12,15 +15,15 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
       response.data = error.data;
     }
 
+    logger.error(error, error.constructor.name);
     res.status(error.statusCode).json(response);
     return;
   }
 
-  console.error('Unhandled error:', error);
+  logger.error(error, 'UnhandledError');
   res.status(500).json({
     error: 'internal_server_error',
     description: 'An unexpected error occurred'
   });
-
   return;
 }; 

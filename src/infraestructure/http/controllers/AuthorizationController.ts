@@ -3,6 +3,9 @@ import { AuthorizationService } from '../../../app/services/AuthorizationService
 import { LowDBClientStorage } from '../../database/LowDBClientStorage';
 import { LowDBAuthorizationCodeStorage } from '../../database/LowDBAuthorizationCodeStorage';
 import { BadRequestException, UnauthorizedException } from '../../../domain/exceptions/HttpExceptions';
+import { LoggerFactory } from '../../logger/LoggerFactory';
+
+const logger = LoggerFactory.getLogger();
 
 interface AuthorizeQuery {
   response_type?: 'code' | 'token';
@@ -41,6 +44,10 @@ export class AuthorizationController {
     }
 
     if (response_type === 'token') {
+      logger.warn(
+        'Client attempted to use deprecated token response_type',
+        'AuthorizationController'
+      );
       throw new BadRequestException(
         'The "token" response_type is deprecated and not supported in this implementation.'
       );
