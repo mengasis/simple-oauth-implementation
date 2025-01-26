@@ -37,8 +37,8 @@ export class AuthorizationController {
     }
 
     const scopes = typeof scope === 'string' ? scope.split(' ') : [];
-    const userId = req.userId;
-    
+    const userId = req.user?.sub;
+
     if (!userId) {
       throw new UnauthorizedException('User is not authenticated.');
     }

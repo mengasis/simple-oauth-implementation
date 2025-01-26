@@ -25,5 +25,4 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
     error: 'internal_server_error',
     description: 'An unexpected error occurred'
   });
-  return;
 }; 
