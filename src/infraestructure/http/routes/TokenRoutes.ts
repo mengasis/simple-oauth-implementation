@@ -28,4 +28,12 @@ routes.post('/revoke', (req: Request, res: Response, next: NextFunction) => {
   tokenController.revoke(req, res).catch(next);
 });
 
+// New introspect route
+routes.post(
+  '/introspect',
+  (req: Request, res: Response, next: NextFunction) => {
+    tokenController.introspect(req, res).catch(next);
+  },
+);
+
 export default routes;

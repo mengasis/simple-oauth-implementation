@@ -75,4 +75,19 @@ export class TokenController {
 
     res.status(200).json({ message: 'Token revoked successfully' });
   }
+
+  async introspect(req: Request, res: Response): Promise<void> {
+    const { token, token_type_hint } = req.body;
+
+    if (!token) {
+      throw new BadRequestException('Token is required');
+    }
+
+    const tokenInfo = await this.tokenService.introspectToken(
+      token,
+      token_type_hint,
+    );
+
+    res.status(200).json(tokenInfo);
+  }
 }

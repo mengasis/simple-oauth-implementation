@@ -10,6 +10,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from '../../infraestructure/utils/tokenGenerator';
+import type { TokenIntrospectionResponse } from '../../domain/entities/TokenIntrospectionResponse';
 
 export class TokenService {
   constructor(
@@ -151,5 +152,30 @@ export class TokenService {
     }
 
     await this.tokenRepository.deleteToken(token);
+  }
+
+  async introspectToken(
+    token: string,
+    tokenTypeHint?: string,
+  ): Promise<TokenIntrospectionResponse> {
+    let existingToken: Token | null = null;
+
+    // Determine the type of token and fetch the existing token from the repository
+    if (tokenTypeHint === 'access_token') {
+      existingToken = await this.tokenRepository.findByAccessToken(token);
+    } else if (tokenTypeHint === 'refresh_token') {
+      existingToken = await this.tokenRepository.findByRefreshToken(token);
+    }
+
+    if (!existingToken) {
+      throw new UnauthorizedException('Token not found');
+    }
+
+    return {
+      active: true,
+      client_id: existingToken.clientId,
+      scopes: existingToken.scopes,
+      exp: existingToken.expiresIn,
+    };
   }
 }
