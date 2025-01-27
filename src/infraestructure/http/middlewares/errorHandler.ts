@@ -4,7 +4,7 @@ import { LoggerFactory } from '../../logger/LoggerFactory';
 
 const logger = LoggerFactory.getLogger();
 
-export const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
+export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   if (error instanceof BaseException) {
     const response: Record<string, unknown> = {
       error: error.name.replace('Exception', '').toLowerCase(),

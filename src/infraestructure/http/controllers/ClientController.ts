@@ -13,10 +13,13 @@ interface RegisterClientBody {
 
 const logger = LoggerFactory.getLogger();
 
+export type ClientRequest = Request<unknown, unknown, RegisterClientBody>;
+
+
 export class ClientController {
   constructor(private readonly clientStorage: LowDBClientStorage) {}
 
-  async register(req: Request<unknown, unknown, RegisterClientBody>, res: Response) {
+  async register(req: ClientRequest, res: Response) {
     const { client_name, redirect_uris, grant_types, scopes } = req.body;
 
     logger.info(`Registering new client: ${client_name}`, 'ClientController');
@@ -58,8 +61,8 @@ export class ClientController {
       client_id: client.id,
       client_secret: client.secret,
       client_name: client.name,
-      redirect_uris: client.redirectUris,
-      grant_types: client.grantTypes,
+      redirect_uris: client.redirect_uris,
+      grant_types: client.grant_types,
       scopes: client.scopes
     });
   }

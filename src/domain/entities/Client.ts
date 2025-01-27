@@ -3,23 +3,23 @@ export class Client {
     public readonly id: string,
     public readonly secret: string,
     public readonly name: string,
-    public readonly redirectUris: string[],
-    public readonly grantTypes: string[],
+    public readonly redirect_uris: string[],
+    public readonly grant_types: string[],
     public readonly scopes: string[]
   ) {}
 
   static create(
     name: string,
-    redirectUris: string[],
-    grantTypes: string[],
+    redirect_uris: string[],
+    grant_types: string[],
     scopes: string[]
   ): Client {
     return new Client(
       crypto.randomUUID(),
       crypto.randomUUID(),
       name,
-      redirectUris,
-      grantTypes,
+      redirect_uris,
+      grant_types,
       scopes
     );
   }

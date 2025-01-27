@@ -1,0 +1,21 @@
+### Register New Client
+POST http://localhost:3000/client/register
+Content-Type: application/json
+
+{
+  "client_name": "Example Client App",
+  "redirect_uris": ["http://localhost:8080/callback"],
+  "grant_types": ["authorization_code"],
+  "scopes": ["read", "write"]
+}
+
+### Register Client - Invalid URI
+POST http://localhost:3000/client/register
+Content-Type: application/json
+
+{
+  "client_name": "Invalid Client",
+  "redirect_uris": ["not-a-valid-uri"],
+  "grant_types": ["authorization_code"],
+  "scopes": ["read"]
+} 

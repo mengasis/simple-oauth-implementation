@@ -1,7 +1,5 @@
 import type { Request, Response } from 'express';
-import { AuthorizationService } from '../../../app/services/AuthorizationService';
-import { LowDBClientStorage } from '../../database/LowDBClientStorage';
-import { LowDBAuthorizationCodeStorage } from '../../database/LowDBAuthorizationCodeStorage';
+import type { AuthorizationService } from '../../../application/services/AuthorizationService';
 import { BadRequestException, UnauthorizedException } from '../../../domain/exceptions/HttpExceptions';
 import { LoggerFactory } from '../../logger/LoggerFactory';
 
@@ -18,16 +16,7 @@ interface AuthorizeQuery {
 export type AuthorizeRequest = Request<unknown, unknown, unknown, AuthorizeQuery>;
 
 export class AuthorizationController {
-  private authorizationService: AuthorizationService;
-
-  constructor() {
-    const clientRepository = new LowDBClientStorage();
-    const codeRepository = new LowDBAuthorizationCodeStorage();
-    this.authorizationService = new AuthorizationService(
-      clientRepository,
-      codeRepository,
-    );
-  }
+  constructor(private readonly authorizationService: AuthorizationService) {}
 
   async authorize(req: AuthorizeRequest, res: Response) {
     const { response_type, client_id, redirect_uri, scope, state } = req.query;
@@ -42,24 +31,24 @@ export class AuthorizationController {
     if (!userId) {
       throw new UnauthorizedException('User is not authenticated.');
     }
-
-    if (response_type === 'token') {
-      logger.warn(
-        'Client attempted to use deprecated token response_type',
-        'AuthorizationController'
-      );
-      throw new BadRequestException(
-        'The "token" response_type is deprecated and not supported in this implementation.'
-      );
-    }
-
-    if (response_type !== 'code') {
-      throw new BadRequestException('unsupported_response_type');
-    }
-
-    if (!state || typeof state !== 'string') {
-      throw new BadRequestException('State parameter is required.');
-    }
+  
+      if (response_type === 'token') {
+        logger.warn(
+          'Client attempted to use deprecated token response_type',
+          'AuthorizationController'
+        );
+        throw new BadRequestException(
+          'The "token" response_type is deprecated and not supported in this implementation.'
+        );
+      }
+  
+      if (response_type !== 'code') {
+        throw new BadRequestException('unsupported_response_type');
+      }
+  
+      if (!state || typeof state !== 'string') {
+        throw new BadRequestException('State parameter is required.');
+      }
 
     const redirectURL = await this.authorizationService.authorize(
       client_id,
@@ -68,7 +57,7 @@ export class AuthorizationController {
       userId,
       state
     );
-    
+
     res.redirect(redirectURL);
   }
-}
+} 

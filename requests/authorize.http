@@ -1,0 +1,18 @@
+@authToken = eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyMzQifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTczNzk0NTA5NCwiZXhwIjoxNzM3OTQ4Njk0fQ.iC2yUrcFBsMiBqQRFvRdwM2UXHKV3foJKovR1unr7FnSGI4j2GKNhmdxeIQlrQhbrRSDUQeSIW6JBjdG7jpfXu8GVG3nGCfEu3Zbm3HQnh2fkDbt6i1YgX-3P4uo_29mSWlbNfdmks3RwEsram6Utoc5-O-P62Z8KHneJq0GkKxWwVev_b3b01ekpwEoF8LP_94TJw1Cen_4B7ESUMuwyt50_aZ7O4QjCsNnJwBmjynmVtXDvnlyoU6cnJSSPaeFH3CPNqCYHYlKip9Nqk7P7QBovaB9IFwbqTgKqkk4jqszMOQ5VlS7WsY1tqMNzwXrTkzDfBfJ-D-PN9YJW4OehA
+### Authorization Request - Success
+GET http://localhost:3000/oauth/authorize
+    ?response_type=code
+    &client_id=4206e946-68d3-4c3e-b496-3b98ff02f3f3
+    &redirect_uri=http://localhost:4000/callback
+    &scope=read%20write
+    &state=xyz123
+Authorization: Bearer {{authToken}}
+
+### Authorization Request - Invalid Client
+GET http://localhost:3000/oauth/authorize
+    ?response_type=code
+    &client_id=invalid_client_id
+    &redirect_uri=http://localhost:4000/callback
+    &scope=read%20write
+    &state=xyz123
+Authorization: Bearer {{authToken}}
