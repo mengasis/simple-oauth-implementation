@@ -9,6 +9,7 @@ interface RegisterClientBody {
   redirect_uris: string[];
   grant_types: string[];
   scopes: string[];
+  confidential: boolean;
 }
 
 const logger = LoggerFactory.getLogger();
@@ -20,7 +21,7 @@ export class ClientController {
   constructor(private readonly clientStorage: LowDBClientStorage) {}
 
   async register(req: ClientRequest, res: Response) {
-    const { client_name, redirect_uris, grant_types, scopes } = req.body;
+    const { client_name, redirect_uris, grant_types, scopes, confidential } = req.body;
 
     logger.info(`Registering new client: ${client_name}`, 'ClientController');
 
@@ -51,7 +52,8 @@ export class ClientController {
       client_name,
       redirect_uris,
       grant_types,
-      scopes || []
+      scopes || [],
+      confidential
     );
 
     await this.clientStorage.save(client);
@@ -63,7 +65,8 @@ export class ClientController {
       client_name: client.name,
       redirect_uris: client.redirect_uris,
       grant_types: client.grant_types,
-      scopes: client.scopes
+      scopes: client.scopes,
+      confidential: client.confidential
     });
   }
 } 
