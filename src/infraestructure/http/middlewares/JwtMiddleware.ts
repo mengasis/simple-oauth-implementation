@@ -2,6 +2,9 @@ import type { Request, Response, NextFunction } from 'express';
 import { createRemoteJWKSet, jwtVerify, decodeProtectedHeader } from 'jose';
 import { UnauthorizedException, InternalServerErrorException } from '../../../domain/exceptions/HttpExceptions';
 import type { JwtPayload } from '../../../domain/ports/JwtVerifier';
+import { LoggerFactory } from '../../logger/LoggerFactory';
+
+const logger = LoggerFactory.getLogger();
 
 export class JwtMiddleware {
   private readonly remoteJWKSet: ReturnType<typeof createRemoteJWKSet>;
@@ -20,6 +23,7 @@ export class JwtMiddleware {
       }
 
       const payload = await this.verifyToken(token);
+      logger.info(`User authenticated successfully with payload: ${JSON.stringify(payload)}`);
       req.user = payload;
       next();
     } catch (error) {
@@ -37,7 +41,7 @@ export class JwtMiddleware {
 
   private async verifyToken(token: string): Promise<JwtPayload> {
     try {
-      const { kid } = decodeProtectedHeader(token);
+      const {kid} = decodeProtectedHeader(token);
       if (!kid) {
         throw new UnauthorizedException('Token is missing key ID');
       }
@@ -55,6 +59,7 @@ export class JwtMiddleware {
       if (error instanceof UnauthorizedException) {
         throw error;
       }
+      logger.error('JwtMiddleware.verifyToken', error as string);
       throw new InternalServerErrorException('Token verification failed');
     }
   }

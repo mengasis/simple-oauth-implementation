@@ -1,0 +1,18 @@
+### Login as Authenticated User
+POST http://localhost:4000/login
+Content-Type: application/json
+
+{
+  "username": "authenticatedUser"
+}
+
+### Login as Unauthenticated User
+POST http://localhost:4000/login
+Content-Type: application/json
+
+{
+  "username": "unauthenticatedUser"
+}
+
+### Fetch JWKS
+GET http://localhost:4000/.well-known/jwks.json 
