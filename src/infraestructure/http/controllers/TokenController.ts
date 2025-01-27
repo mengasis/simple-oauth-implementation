@@ -6,7 +6,15 @@ export class TokenController {
   constructor(private readonly tokenService: TokenService) {}
 
   async exchange(req: Request, res: Response): Promise<void> {
-    const { grant_type, code, redirect_uri, client_id, client_secret, refresh_token, code_verifier } = req.body;
+    const {
+      grant_type,
+      code,
+      redirect_uri,
+      client_id,
+      client_secret,
+      refresh_token,
+      code_verifier,
+    } = req.body;
 
     if (grant_type === 'authorization_code') {
       const token = await this.tokenService.exchangeAuthorizationCode({
@@ -24,8 +32,8 @@ export class TokenController {
       });
 
       return;
-    } 
-    
+    }
+
     if (grant_type === 'refresh_token') {
       const token = await this.tokenService.exchangeRefreshToken({
         refreshToken: refresh_token,
@@ -38,8 +46,8 @@ export class TokenController {
         refresh_token: token.refreshToken, // Optional
       });
       return;
-    } 
-    
+    }
+
     if (grant_type === 'client_credentials') {
       const token = await this.tokenService.clientCredentials({
         clientId: client_id,
@@ -55,4 +63,4 @@ export class TokenController {
 
     throw new BadRequestException('Unsupported grant type');
   }
-} 
+}

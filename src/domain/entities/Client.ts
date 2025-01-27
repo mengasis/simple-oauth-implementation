@@ -6,7 +6,7 @@ export class Client {
     public readonly redirect_uris: string[],
     public readonly grant_types: string[],
     public readonly scopes: string[],
-    public readonly confidential: boolean
+    public readonly confidential: boolean,
   ) {}
 
   static create(
@@ -14,7 +14,7 @@ export class Client {
     redirect_uris: string[],
     grant_types: string[],
     scopes: string[],
-    confidential: boolean
+    confidential: boolean,
   ): Client {
     return new Client(
       crypto.randomUUID(),
@@ -23,7 +23,7 @@ export class Client {
       redirect_uris,
       grant_types,
       scopes,
-      confidential
+      confidential,
     );
   }
 }

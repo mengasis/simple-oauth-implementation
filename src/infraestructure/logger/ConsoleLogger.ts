@@ -10,7 +10,8 @@ export class ConsoleLogger implements Logger {
   }
 
   error(message: string | Error, context?: string): void {
-    const errorMessage = message instanceof Error ? message.stack || message.message : message;
+    const errorMessage =
+      message instanceof Error ? message.stack || message.message : message;
     console.error(`[ERROR] ${this.formatContext(context)}${errorMessage}`);
   }
 
@@ -21,4 +22,4 @@ export class ConsoleLogger implements Logger {
   private formatContext(context?: string): string {
     return context ? `[${context}] ` : '';
   }
-} 
+}

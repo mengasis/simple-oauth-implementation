@@ -2,19 +2,23 @@ import type { AuthorizationCodeRepository } from '../../domain/repositories/Auth
 import type { AuthorizationCode } from '../../domain/entities/AuthorizationCode';
 import { db } from './LowDBDatabase';
 
-export class LowDBAuthorizationCodeStorage implements AuthorizationCodeRepository {
+export class LowDBAuthorizationCodeStorage
+  implements AuthorizationCodeRepository
+{
   async save(code: AuthorizationCode): Promise<void> {
     db.data?.codes.push(code);
     await db.write();
   }
 
   async findByCode(code: string): Promise<AuthorizationCode | null> {
-    return db.data?.codes.find(authCode => authCode.code === code) || null;
+    return db.data?.codes.find((authCode) => authCode.code === code) || null;
   }
 
   async deleteByCode(code: string): Promise<void> {
     if (db.data?.codes) {
-      db.data.codes = db.data.codes.filter(authCode => authCode.code !== code);
+      db.data.codes = db.data.codes.filter(
+        (authCode) => authCode.code !== code,
+      );
     }
     await db.write();
   }

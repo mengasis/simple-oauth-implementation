@@ -13,13 +13,22 @@ const jwtMiddleware = new JwtMiddleware(authConfig.jwks.url);
 const clientRepository = new LowDBClientStorage();
 const codeRepository = new LowDBAuthorizationCodeStorage();
 
-const authorizationService = new AuthorizationService(clientRepository, codeRepository);
+const authorizationService = new AuthorizationService(
+  clientRepository,
+  codeRepository,
+);
 
-const authorizationCodeController = new AuthorizationCodeController(authorizationService);
+const authorizationCodeController = new AuthorizationCodeController(
+  authorizationService,
+);
 const routes = express.Router();
 
-routes.get('/authorize', jwtMiddleware.handle, (req: AuthorizationCodeRequest, res: Response, next: NextFunction) => {
-  authorizationCodeController.authorize(req, res).catch(next);
-});
+routes.get(
+  '/authorize',
+  jwtMiddleware.handle,
+  (req: AuthorizationCodeRequest, res: Response, next: NextFunction) => {
+    authorizationCodeController.authorize(req, res).catch(next);
+  },
+);
 
 export default routes;

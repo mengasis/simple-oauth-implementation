@@ -6,4 +6,4 @@ export interface JwtPayload {
 
 export interface JwtVerifier {
   verifyToken(token: string): Promise<JwtPayload>;
-} 
+}

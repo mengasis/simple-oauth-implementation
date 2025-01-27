@@ -1,6 +1,9 @@
 import type { Request, Response, NextFunction } from 'express';
 import { createRemoteJWKSet, jwtVerify, decodeProtectedHeader } from 'jose';
-import { UnauthorizedException, InternalServerErrorException } from '../../../domain/exceptions/HttpExceptions';
+import {
+  UnauthorizedException,
+  InternalServerErrorException,
+} from '../../../domain/exceptions/HttpExceptions';
 import type { JwtPayload } from '../../../domain/ports/JwtVerifier';
 import { LoggerFactory } from '../../logger/LoggerFactory';
 
@@ -11,7 +14,7 @@ export class JwtMiddleware {
 
   constructor(jwksUrl: string) {
     this.remoteJWKSet = createRemoteJWKSet(new URL(jwksUrl), {
-      cacheMaxAge: 600000 // 10 minutes
+      cacheMaxAge: 600000, // 10 minutes
     });
   }
 
@@ -23,7 +26,9 @@ export class JwtMiddleware {
       }
 
       const payload = await this.verifyToken(token);
-      logger.info(`User authenticated successfully with payload: ${JSON.stringify(payload)}`);
+      logger.info(
+        `User authenticated successfully with payload: ${JSON.stringify(payload)}`,
+      );
       req.user = payload;
       next();
     } catch (error) {
@@ -41,13 +46,13 @@ export class JwtMiddleware {
 
   private async verifyToken(token: string): Promise<JwtPayload> {
     try {
-      const {kid} = decodeProtectedHeader(token);
+      const { kid } = decodeProtectedHeader(token);
       if (!kid) {
         throw new UnauthorizedException('Token is missing key ID');
       }
 
       const { payload } = await jwtVerify(token, this.remoteJWKSet, {
-        algorithms: ['RS256']
+        algorithms: ['RS256'],
       });
 
       if (!payload.sub) {
@@ -63,4 +68,4 @@ export class JwtMiddleware {
       throw new InternalServerErrorException('Token verification failed');
     }
   }
-} 
+}

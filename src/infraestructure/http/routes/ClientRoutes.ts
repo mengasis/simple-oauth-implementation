@@ -1,4 +1,9 @@
-import { Router, type NextFunction, type Request, type Response } from 'express';
+import {
+  Router,
+  type NextFunction,
+  type Request,
+  type Response,
+} from 'express';
 import { ClientController } from '../controllers/ClientController';
 import { LowDBClientStorage } from '../../database/LowDBClientStorage';
 
@@ -9,4 +14,4 @@ routes.post('/register', (req: Request, res: Response, next: NextFunction) => {
   clientController.register(req, res).catch(next);
 });
 
-export default routes; 
+export default routes;

@@ -16,12 +16,12 @@ const logger = LoggerFactory.getLogger();
 
 export type ClientRequest = Request<unknown, unknown, RegisterClientBody>;
 
-
 export class ClientController {
   constructor(private readonly clientStorage: LowDBClientStorage) {}
 
   async register(req: ClientRequest, res: Response) {
-    const { client_name, redirect_uris, grant_types, scopes, confidential } = req.body;
+    const { client_name, redirect_uris, grant_types, scopes, confidential } =
+      req.body;
 
     logger.info(`Registering new client: ${client_name}`, 'ClientController');
 
@@ -31,7 +31,7 @@ export class ClientController {
 
     if (!redirect_uris?.length) {
       throw new BadRequestException(
-        'The redirect_uris field is required and must contain at least one valid URI.'
+        'The redirect_uris field is required and must contain at least one valid URI.',
       );
     }
 
@@ -53,11 +53,14 @@ export class ClientController {
       redirect_uris,
       grant_types,
       scopes || [],
-      confidential
+      confidential,
     );
 
     await this.clientStorage.save(client);
-    logger.info(`Client registered successfully: ${client.id}`, 'ClientController');
+    logger.info(
+      `Client registered successfully: ${client.id}`,
+      'ClientController',
+    );
 
     return res.status(201).json({
       client_id: client.id,
@@ -66,7 +69,7 @@ export class ClientController {
       redirect_uris: client.redirect_uris,
       grant_types: client.grant_types,
       scopes: client.scopes,
-      confidential: client.confidential
+      confidential: client.confidential,
     });
   }
-} 
+}
