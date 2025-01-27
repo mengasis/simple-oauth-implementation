@@ -63,4 +63,16 @@ export class TokenController {
 
     throw new BadRequestException('Unsupported grant type');
   }
+
+  async revoke(req: Request, res: Response): Promise<void> {
+    const { token, token_type_hint } = req.body;
+
+    if (!token) {
+      throw new BadRequestException('Token is required');
+    }
+
+    await this.tokenService.revokeToken(token, token_type_hint);
+
+    res.status(200).json({ message: 'Token revoked successfully' });
+  }
 }

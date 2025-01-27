@@ -22,10 +22,10 @@ export class LowDBTokenStorage implements TokenRepository {
     );
   }
 
-  async revokeByAccessToken(accessToken: string): Promise<void> {
+  async deleteToken(token: string): Promise<void> {
     if (db.data) {
       db.data.tokens = db.data.tokens.filter(
-        (token) => token.accessToken !== accessToken,
+        (t) => t.accessToken !== token && t.refreshToken !== token,
       );
       await db.write();
     }

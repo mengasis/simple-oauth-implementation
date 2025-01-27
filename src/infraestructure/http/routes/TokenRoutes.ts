@@ -24,4 +24,8 @@ routes.post('/token', (req: Request, res: Response, next: NextFunction) => {
   tokenController.exchange(req, res).catch(next);
 });
 
+routes.post('/revoke', (req: Request, res: Response, next: NextFunction) => {
+  tokenController.revoke(req, res).catch(next);
+});
+
 export default routes;

@@ -134,4 +134,22 @@ export class TokenService {
 
     return token;
   }
+
+  async revokeToken(token: string, tokenTypeHint?: string): Promise<void> {
+    let existingToken: Token | null = null;
+
+    if (tokenTypeHint === 'access_token') {
+      existingToken = await this.tokenRepository.findByAccessToken(token);
+    } else if (tokenTypeHint === 'refresh_token') {
+      existingToken = await this.tokenRepository.findByRefreshToken(token);
+    } else {
+      throw new BadRequestException('Invalid token type hint');
+    }
+
+    if (!existingToken) {
+      throw new UnauthorizedException('Token not found');
+    }
+
+    await this.tokenRepository.deleteToken(token);
+  }
 }
